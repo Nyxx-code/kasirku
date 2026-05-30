@@ -4,23 +4,55 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Developer\DeveloperController; 
 use App\Http\Controllers\Kasir\DashboardController as KasirDashboardController;
 use App\Http\Controllers\Kasir\ReportController as KasirReportController;
 use App\Http\Controllers\Kasir\TransactionController as KasirTransactionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\TransaksiController;
 
-Route::get('/', function () {
-    return view('landing');
-});
+/*
+|--------------------------------------------------------------------------
+| Rute Publik
+|--------------------------------------------------------------------------
+*/
+Route::get('/', function () { return view('landing'); });
+Route::get('/fitur', function () { return view('fitur'); });
+Route::get('/harga', function () { return view('harga'); });
+Route::get('/kontak', function () { return view('kontak'); });
+Route::post('/kontak/kirim', [ContactController::class, 'kirimPesan'])->name('kontak.kirim');
 
+/*
+|--------------------------------------------------------------------------
+| Rute Autentikasi
+|--------------------------------------------------------------------------
+*/
 Route::get('/login', [AuthController::class, 'show'])->name('login');
-
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.submit');
-
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
+/*
+|--------------------------------------------------------------------------
+| KELOMPOK RUTE DEVELOPER
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:Developer']) 
+    ->prefix('developer')
+    ->name('developer.')
+    ->group(function () {
+        Route::get('/', [DeveloperController::class, 'index'])->name('dashboard');
+        Route::get('/register-admin', [DeveloperController::class, 'showRegisterForm'])->name('register.admin');
+        Route::post('/register-admin', [DeveloperController::class, 'storeAdmin'])->name('register.admin.submit');
+    });
+
+/*
+|--------------------------------------------------------------------------
+| KELOMPOK RUTE ADMIN
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -31,8 +63,14 @@ Route::middleware(['auth', 'role:admin'])
         Route::put('/products/{productId}', [AdminProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{productId}', [AdminProductController::class, 'destroy'])->name('products.destroy');
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+        Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     });
 
+/*
+|--------------------------------------------------------------------------
+| KELOMPOK RUTE KASIR
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:kasir'])
     ->prefix('kasir')
     ->name('kasir.')

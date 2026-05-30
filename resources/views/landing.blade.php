@@ -14,24 +14,32 @@
 <body class="bg-slate-50 text-slate-800">
 
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
             <div class="flex justify-between h-16 items-center">
-
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold text-[#1e4e79]">Kasir<span class="text-[#f39200]">Ku</span></span>
                 </div>
 
                 <div class="hidden md:flex space-x-8 text-sm font-medium">
-                    <a href="index.html" class="hover:text-[#1e4e79] transition">Beranda</a>
-                    <a href="fitur.html" class="hover:text-[#1e4e79] transition">Fitur</a>
-                    <a href="harga.html" class="hover:text-[#1e4e79] transition">Harga</a>
-                    <a href="kontak" class="hover:text-[#1e4e79] transition">Kontak</a>
-                </div>
+    <a href="{{ url('/') }}" class="transition {{ request()->is('/') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+        Beranda
+    </a>
+    
+    <a href="{{ url('/fitur') }}" class="transition {{ request()->is('fitur') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+        Fitur
+    </a>
+    
+    <a href="{{ url('/harga') }}" class="transition {{ request()->is('harga') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+        Harga
+    </a>
+    
+    <a href="{{ url('/kontak') }}" class="transition {{ request()->is('kontak') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+        Kontak
+    </a>
+</div>
 
                 <div>
-                    <a href="/login" class="bg-[#1e4e79] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#163a5a] transition shadow-md">Masuk</a>
+                    <a href="{{ route('login') }}" class="bg-[#1e4e79] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#163a5a] transition shadow-md">Masuk</a>
                 </div>
             </div>
         </div>
@@ -50,7 +58,9 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <button class="border-2 border-[#1e4e79] text-[#1e4e79] px-8 py-4 rounded-xl font-bold hover:bg-[#1e4e79] hover:text-white transition"><a href="harga.html">Daftar Sekarang</a></button>
+                    <a href="{{ url('/harga') }}" class="inline-block text-center border-2 border-[#1e4e79] text-[#1e4e79] px-8 py-4 rounded-xl font-bold hover:bg-[#1e4e79] hover:text-white transition">
+                        Daftar Sekarang
+                    </a>
                 </div>
 
             </div>
@@ -101,18 +111,12 @@
     </section>
 
     <section class="py-24 bg-slate-900 text-white">
-
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-16">
-
             <div class="md:w-1/2">
-                <h2 class="text-3xl font-bold mb-6 italic text-[#f39200]">#SistemTerintegrasi</h2>
-
                 <h3 class="text-4xl font-bold mb-6">Satu Login, Dua Peran Berbeda.</h3>
-
                 <p class="text-slate-400 mb-8 leading-relaxed">
                     Sistem kami mendeteksi siapa Anda secara otomatis. Tak perlu ribet, keamanan terjaga sesuai hak akses masing-masing.
                 </p>
-
                 <ul class="space-y-4">
                     <li class="flex items-center gap-3 italic">
                         <div class="w-2 h-2 bg-[#f39200] rounded-full"></div> 

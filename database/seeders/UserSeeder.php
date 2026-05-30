@@ -13,6 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Admin
         User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
@@ -22,12 +23,23 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // Kasir
         User::firstOrCreate(
             ['email' => 'kasir@example.com'],
             [
                 'name' => 'Kasir',
                 'password' => Hash::make('password123'),
                 'role' => 'kasir',
+            ]
+        );
+
+        // Developer
+        User::firstOrCreate(
+            ['email' => 'developer@example.com'],
+            [
+                'name' => 'Developer',
+                'password' => Hash::make('password123'),
+                'role' => 'Developer', // Gunakan 'Developer' sesuai keinginanmu
             ]
         );
     }
