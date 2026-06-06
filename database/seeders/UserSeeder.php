@@ -40,6 +40,7 @@ class UserSeeder extends Seeder
                 'name' => 'Developer',
                 'password' => Hash::make('password123'),
                 'role' => 'Developer', // Gunakan 'Developer' sesuai keinginanmu
+                'store_name' => 'Sistem Utama', // Tambahkan ini
             ]
         );
     }

@@ -43,11 +43,16 @@ Route::middleware(['auth', 'role:Developer'])
     ->prefix('developer')
     ->name('developer.')
     ->group(function () {
+        // 1. Halaman Utama Grafik Dashboard
         Route::get('/', [DeveloperController::class, 'index'])->name('dashboard');
+        
+        // 2. Halaman BARU: Tabel Kelola Manajemen Admin (index.blade.php)
+        Route::get('/admin', [DeveloperController::class, 'manageAdmin'])->name('admin.index');
+        
+        // 3. Halaman Form Registrasi Admin
         Route::get('/register-admin', [DeveloperController::class, 'showRegisterForm'])->name('register.admin');
         Route::post('/register-admin', [DeveloperController::class, 'storeAdmin'])->name('register.admin.submit');
     });
-
 /*
 |--------------------------------------------------------------------------
 | KELOMPOK RUTE ADMIN

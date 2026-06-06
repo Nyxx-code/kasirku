@@ -8,18 +8,18 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body{
             font-family: 'Poppins', sans-serif;
+            overflow-y: scroll; /* <-- TAMBAHKAN INI AGAR SCROLLBAR SELALU ADA DAN NAVBAR GA BERGESER */
         }
     </style>
 </head>
 
-    <body class="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 text-slate-800">
+<body class="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 text-slate-800">
 
     <header class="sticky top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-lg shadow-sm">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -38,12 +38,19 @@
             <nav class="hidden md:flex items-center gap-2">
                 
                 {{-- NAVIGASI DEVELOPER --}}
-                @if (auth()->user()->role === 'developer')
-                    <a href="{{ route('developer.dashboard') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Dashboard</a>
-                    <a href="{{ route('developer.register.admin') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Registrasi Admin</a>
+                @if (auth()->user()->role === 'Developer' || auth()->user()->role === 'developer')
+                    <a href="{{ route('developer.dashboard') }}" 
+                       class="rounded-xl px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('developer.dashboard') ? 'bg-slate-200 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        Dashboard
+                    </a>
+                    
+                    <a href="{{ route('developer.admin.index') }}" 
+                       class="rounded-xl px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('developer.admin.index') || request()->routeIs('developer.register.admin') ? 'bg-slate-200 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        Kelola Admin
+                    </a>
 
                 {{-- NAVIGASI ADMIN --}}
-                @elseif (auth()->user()->role === 'admin')
+                @elseif (auth()->user()->role === 'admin' || auth()->user()->role === 'Admin')
                     <a href="{{ route('admin.dashboard') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Dashboard</a>
                     <a href="{{ route('admin.products.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Produk</a>
                     <a href="{{ route('admin.reports.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Laporan</a>
@@ -81,5 +88,4 @@
         @yield('content')
     </main>
 </body>
-
 </html>
