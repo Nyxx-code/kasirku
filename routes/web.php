@@ -11,6 +11,7 @@ use App\Http\Controllers\Kasir\TransactionController as KasirTransactionControll
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\Kasir\CashierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,16 +44,14 @@ Route::middleware(['auth', 'role:Developer'])
     ->prefix('developer')
     ->name('developer.')
     ->group(function () {
-        // 1. Halaman Utama Grafik Dashboard
         Route::get('/', [DeveloperController::class, 'index'])->name('dashboard');
-        
-        // 2. Halaman BARU: Tabel Kelola Manajemen Admin (index.blade.php)
-        Route::get('/admin', [DeveloperController::class, 'manageAdmin'])->name('admin.index');
-        
-        // 3. Halaman Form Registrasi Admin
-        Route::get('/register-admin', [DeveloperController::class, 'showRegisterForm'])->name('register.admin');
         Route::post('/register-admin', [DeveloperController::class, 'storeAdmin'])->name('register.admin.submit');
+        Route::put('/update-admin/{id}', [DeveloperController::class, 'updateAdmin'])->name('update.admin');
+        Route::delete('/delete-admin/{id}', [DeveloperController::class, 'destroyAdmin'])->name('delete.admin');
+        Route::get('/transactions', [DeveloperController::class, 'transactions'])->name('transactions');
+        Route::get('/transactions/export-pdf', [DeveloperController::class, 'exportPdf'])->name('transactions.pdf');
     });
+
 /*
 |--------------------------------------------------------------------------
 | KELOMPOK RUTE ADMIN
@@ -62,12 +61,23 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        // Halaman Dashboard Utama
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // MENGGUNAKAN RESOURCE UNTUK KASIR (Otomatis handle index, store, update, destroy)
+        // Rute manual AdminDashboardController sudah dihapus agar tidak tabrakan
+        Route::resource('cashiers', CashierController::class)->names('cashiers');
+
+        // Rute untuk Kelola Produk
         Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
         Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
         Route::put('/products/{productId}', [AdminProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{productId}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+        
+        // Rute untuk Laporan
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+        Route::delete('/reports/{id}', [AdminReportController::class, 'destroy'])->name('reports.destroy');
+        
         Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     });
 

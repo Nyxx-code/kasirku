@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('sku', 50)->unique()->nullable();
+            $table->string('sku', 50)->nullable(); // <--- unique() sudah dihapus dari sini
             $table->unsignedInteger('price');
             $table->unsignedInteger('stock')->default(0);
             $table->timestamps();

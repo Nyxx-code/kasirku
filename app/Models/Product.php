@@ -15,6 +15,7 @@ class Product extends Model
         'sku',
         'price',
         'stock',
+        'store_id', // <--- Tambahan agar produk mengenali ID tokonya
     ];
 
     protected $casts = [

@@ -14,7 +14,7 @@
     <style>
         body{
             font-family: 'Poppins', sans-serif;
-            overflow-y: scroll; /* <-- TAMBAHKAN INI AGAR SCROLLBAR SELALU ADA DAN NAVBAR GA BERGESER */
+            overflow-y: scroll;
         }
     </style>
 </head>
@@ -25,12 +25,12 @@
         <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
 
             <div class="flex items-center gap-3">
-                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-lg">
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1e4e79] text-white shadow-lg">
                     🛒
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold leading-none">Sistem Penjualan</h1>
-                    <p class="text-xs text-slate-500">Management Dashboard</p>
+                    <h1 class="text-lg font-bold leading-none text-slate-800">Sistem Penjualan</h1>
+                    <p class="text-xs text-slate-500 font-medium">Management Dashboard</p>
                 </div>
             </div>
 
@@ -39,27 +39,28 @@
                 
                 {{-- NAVIGASI DEVELOPER --}}
                 @if (auth()->user()->role === 'Developer' || auth()->user()->role === 'developer')
-                    <a href="{{ route('developer.dashboard') }}" 
-                       class="rounded-xl px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('developer.dashboard') ? 'bg-slate-200 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                        Dashboard
-                    </a>
                     
-                    <a href="{{ route('developer.admin.index') }}" 
-                       class="rounded-xl px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('developer.admin.index') || request()->routeIs('developer.register.admin') ? 'bg-slate-200 text-slate-900' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                    <a href="{{ route('developer.dashboard') }}" 
+                       class="rounded-xl px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('developer.dashboard') ? 'bg-white text-slate-900 shadow' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
                         Kelola Admin
+                    </a>
+
+                    <a href="{{ route('developer.transactions') }}" 
+                       class="rounded-xl px-4 py-2 text-sm font-semibold transition {{ request()->routeIs('developer.transactions') ? 'bg-white text-slate-900 shadow' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+                        Transaksi
                     </a>
 
                 {{-- NAVIGASI ADMIN --}}
                 @elseif (auth()->user()->role === 'admin' || auth()->user()->role === 'Admin')
-                    <a href="{{ route('admin.dashboard') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Dashboard</a>
-                    <a href="{{ route('admin.products.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Produk</a>
-                    <a href="{{ route('admin.reports.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Laporan</a>
+                    <a href="{{ route('admin.dashboard') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100 text-slate-600">Dashboard</a>
+                    <a href="{{ route('admin.products.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100 text-slate-600">Produk</a>
+                    <a href="{{ route('admin.reports.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100 text-slate-600">Laporan</a>
 
                 {{-- NAVIGASI KASIR --}}
                 @else
-                    <a href="{{ route('kasir.dashboard') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Dashboard</a>
-                    <a href="{{ route('kasir.transactions.create') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Transaksi</a>
-                    <a href="{{ route('kasir.reports.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100">Laporan</a>
+                    <a href="{{ route('kasir.dashboard') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100 text-slate-600">Dashboard</a>
+                    <a href="{{ route('kasir.transactions.create') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100 text-slate-600">Transaksi</a>
+                    <a href="{{ route('kasir.reports.index') }}" class="rounded-xl px-4 py-2 text-sm font-medium transition hover:bg-slate-100 text-slate-600">Laporan</a>
                 @endif
 
             </nav>
@@ -67,18 +68,15 @@
 
             <div class="flex items-center gap-4">
                 @auth
-                    <div class="hidden sm:block text-right">
-                        <p class="text-sm font-semibold">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-slate-500 uppercase">{{ auth()->user()->role }}</p>
-                    </div>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800 shadow-md">
+                        {{-- TOMBOL LOGOUT GELAP --}}
+                        <button class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 shadow-md">
                             Logout
                         </button>
                     </form>
                 @else
-                    <span class="text-sm text-slate-500">Guest</span>
+                    <span class="text-sm text-slate-500 font-medium">Guest</span>
                 @endauth
             </div>
         </div>

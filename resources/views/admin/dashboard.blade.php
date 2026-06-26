@@ -1,91 +1,164 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="p-6 space-y-6">
-    <div class="flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Dashboard Utama</h1>
-            <p class="text-slate-500 text-sm">Monitor performa toko Anda.</p>
+<div class="max-w-6xl mx-auto space-y-8 pb-12">
+    
+    {{-- Notifikasi --}}
+    @if(session('status'))
+        <div class="bg-green-50 border border-green-200 p-4 rounded-xl text-green-700 font-medium shadow-sm">
+            {{ session('status') }}
+        </div>
+    @endif
+    
+    @if($errors->any())
+        <div class="bg-red-50 border border-red-200 p-4 rounded-xl text-red-700 text-sm shadow-sm">
+            <ul class="list-disc pl-5">
+                @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        {{-- Header Tabel --}}
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">Manajemen Kasir ({{ $cashiers->count() }}/2)</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Maksimal 2 kasir.</p>
+            </div>
+            
+            @if($cashiers->count() < 2)
+                <button onclick="document.getElementById('cashierModal').classList.remove('hidden')" class="px-4 py-3 rounded-xl text-sm font-bold text-white transition hover:opacity-90 shadow-sm" style="background-color: #0f172a;">
+                    + Tambah Kasir
+                </button>
+            @else
+                <span class="px-4 py-2.5 rounded-xl text-sm font-bold bg-slate-200 text-slate-500 cursor-not-allowed">
+                    Limit Tercapai
+                </span>
+            @endif
         </div>
         
-        <a href="{{ route('admin.reports.index') }}" class="bg-[#1e4e79] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#163a5a] transition flex items-center gap-2 shadow-md">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            Lihat Laporan Lengkap
-        </a>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-slate-700">Grafik Omzet</h3>
-                <select id="omzetFilter" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600 rounded-lg px-3 py-1 outline-none">
-                    <option value="harian">Harian</option>
-                    <option value="mingguan" selected>Mingguan</option>
-                    <option value="bulanan">Bulanan</option>
-                </select>
-            </div>
-            <div class="h-64">
-                <canvas id="omzetChart"></canvas>
-            </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-slate-700">Volume Transaksi</h3>
-                <select id="transaksiFilter" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600 rounded-lg px-3 py-1 outline-none">
-                    <option value="harian">Harian</option>
-                    <option value="mingguan" selected>Mingguan</option>
-                    <option value="bulanan">Bulanan</option>
-                </select>
-            </div>
-            <div class="h-64">
-                <canvas id="transaksiChart"></canvas>
-            </div>
+        {{-- Tabel Kasir --}}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 border-b border-slate-100">
+                    <tr class="text-xs uppercase font-bold text-slate-500 tracking-wider">
+                        <th class="p-4 w-16 text-center">No</th>
+                        <th class="p-4 w-1/4">Nama Kasir</th>
+                        <th class="p-4 w-1/3">Email Akses</th>
+                        <th class="p-4 w-24 text-center">Password</th>
+                        <th class="p-4 w-32 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-sm">
+                    @forelse($cashiers as $cashier)
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="p-4 text-center text-slate-500">{{ $loop->iteration }}</td>
+                        <td class="p-4 font-bold text-slate-800">{{ $cashier->name }}</td>
+                        <td class="p-4 text-slate-600">{{ $cashier->email }}</td>
+                        <td class="p-4 text-center font-mono text-slate-400">••••••••</td>
+                        <td class="p-4 text-center flex justify-center gap-3">
+                            <button onclick="openEditModal({{ $cashier->id }}, '{{ addslashes($cashier->name) }}', '{{ addslashes($cashier->email) }}')" class="text-blue-600 hover:text-blue-800 text-xs font-semibold">Edit</button>
+                            <form action="{{ route('admin.cashiers.destroy', $cashier->id) }}" method="POST" onsubmit="return confirm('Hapus akun staf kasir ini?');">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700 text-xs font-semibold">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="5" class="p-8 text-center text-slate-400">Belum ada staf kasir terdaftar.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // 1. Grafik Omzet (Line)
-    const ctxOmzet = document.getElementById('omzetChart').getContext('2d');
-    new Chart(ctxOmzet, {
-        type: 'line',
-        data: {
-            labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-            datasets: [{
-                label: 'Omzet (Rp)',
-                data: [500000, 750000, 600000, 900000, 1200000, 1500000, 1100000],
-                borderColor: '#1e4e79',
-                backgroundColor: 'rgba(30, 78, 121, 0.05)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
+{{-- MODAL TAMBAH --}}
+<div id="cashierModal" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-sm flex justify-center items-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <h2 class="text-lg font-bold text-slate-800">Daftarkan Staf Kasir Baru</h2>
+            <button onclick="document.getElementById('cashierModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">✕</button>
+        </div>
+        <form action="{{ route('admin.cashiers.store') }}" method="POST" class="p-6 space-y-4">
+            @csrf
+            <div><label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nama</label><input type="text" name="name" class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none" required></div>
+            <div><label class="block text-xs font-bold uppercase text-slate-600 mb-1">Email</label><input type="email" name="email" class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none" required></div>
+            <div><label class="block text-xs font-bold uppercase text-slate-600 mb-1">Password</label><input type="password" name="password" class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none" required></div>
+            <button type="submit" class="w-full py-3 rounded-xl text-white font-semibold text-sm mt-4" style="background-color: #0f172a;">Simpan Kasir</button>
+        </form>
+    </div>
+</div>
 
-    // 2. Grafik Volume Transaksi (Bar)
-    const ctxTransaksi = document.getElementById('transaksiChart').getContext('2d');
-    new Chart(ctxTransaksi, {
-        type: 'bar',
-        data: {
-            labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-            datasets: [{
-                label: 'Total Transaksi',
-                data: [12, 19, 15, 25, 30, 22, 18],
-                backgroundColor: '#f59e0b',
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
-        }
-    });
+{{-- MODAL EDIT --}}
+<div id="editModal" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+        
+        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+            <h2 class="text-lg font-bold text-slate-800">Edit Data Kasir</h2>
+            <button onclick="document.getElementById('editModal').classList.add('hidden')"
+                class="text-slate-400 hover:text-slate-600">
+                ✕
+            </button>
+        </div>
+
+        <form id="editForm" method="POST" class="p-6 space-y-4">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">
+                    Nama
+                </label>
+                <input
+                    type="text"
+                    id="edit_name"
+                    name="name"
+                    class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+                    required>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">
+                    Email
+                </label>
+                <input
+                    type="email"
+                    id="edit_email"
+                    name="email"
+                    class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none"
+                    required>
+            </div>
+
+            <p class="text-xs text-slate-400 italic">
+                * Kosongkan password jika tidak ingin mengubahnya.
+            </p>
+
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">
+                    Password Baru
+                </label>
+                <input
+                    type="password"
+                    name="password"
+                    class="w-full px-4 py-2 rounded-xl border border-slate-200 outline-none">
+            </div>
+
+            <button type="submit" class="w-full py-3 rounded-xl text-white font-semibold text-sm mt-4" style="background-color: #0f172a;">Update data</button>
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+    function openEditModal(id, name, email) {
+        const form = document.getElementById('editForm');
+        form.action = `/admin/cashiers/${id}`; 
+        document.getElementById('edit_name').value = name;
+        document.getElementById('edit_email').value = email;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
 </script>
 @endsection

@@ -1,67 +1,90 @@
 @extends('layouts.app')
 
-@section('title', 'Laporan Kasir')
-
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
-        <div>
-            <h1 class="text-xl font-semibold">Laporan Penjualan</h1>
-            <p class="text-sm text-slate-500">Rekap transaksi kasir berdasarkan periode.</p>
-        </div>
-    </div>
+<div class="max-w-6xl mx-auto space-y-6 pb-12 mt-8">
 
-    <form method="get" class="mt-6 grid gap-4 rounded-xl border bg-white p-6 sm:grid-cols-3">
-        <label class="grid gap-2 text-sm">
-            Dari Tanggal
-            <input type="date" name="start" value="{{ $filters['start'] }}" class="rounded-lg border px-3 py-2" />
-        </label>
-        <label class="grid gap-2 text-sm">
-            Sampai Tanggal
-            <input type="date" name="end" value="{{ $filters['end'] }}" class="rounded-lg border px-3 py-2" />
-        </label>
-        <div class="flex items-end">
-            <button class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Terapkan</button>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        
+        <div class="flex justify-between items-center border-b border-slate-100 pb-5 mb-5">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Riwayat Penjualan Saya</h1>
+                <p class="text-sm text-slate-500 mt-1">Laporan semua transaksi yang telah Anda layani.</p>
+            </div>
+            <div class="text-right bg-blue-50 px-6 py-3 rounded-xl border border-blue-100 shadow-sm">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 block">Total Pendapatan Saya</span>
+                <span class="text-xl font-black text-[#1e4e79]">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</span>
+            </div>
         </div>
-    </form>
 
-    <div class="mt-6 grid gap-6 sm:grid-cols-2">
-        <div class="rounded-xl border bg-white p-6">
-            <div class="text-sm text-slate-500">Total Transaksi</div>
-            <div class="mt-2 text-2xl font-semibold">{{ $totalTransactions }}</div>
-        </div>
-        <div class="rounded-xl border bg-white p-6">
-            <div class="text-sm text-slate-500">Total Pendapatan</div>
-            <div class="mt-2 text-2xl font-semibold">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
-        </div>
-    </div>
-
-    <div class="mt-8 rounded-xl border bg-white">
-        <div class="border-b px-6 py-4 text-sm font-semibold">Daftar Transaksi</div>
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-slate-50 text-left text-slate-500">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+                <thead class="bg-slate-50 text-xs uppercase font-bold text-slate-600 border-b border-slate-100">
                     <tr>
-                        <th class="px-6 py-3">Tanggal</th>
-                        <th class="px-6 py-3">Total</th>
-                        <th class="px-6 py-3">Bayar</th>
-                        <th class="px-6 py-3">Kembali</th>
+                        <th class="p-4 w-12 text-center">No</th>
+                        <th class="p-4">Waktu & Transaksi</th>
+                        <th class="p-4">SKU & Nama Barang</th>
+                        <th class="p-4">Harga Satuan</th>
+                        <th class="p-4 text-center">Qty</th>
+                        <th class="p-4 text-right">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse ($sales as $sale)
-                        <tr class="border-t">
-                            <td class="px-6 py-3">{{ $sale->sold_at?->format('d M Y H:i') }}</td>
-                            <td class="px-6 py-3">Rp {{ number_format($sale->total, 0, ',', '.') }}</td>
-                            <td class="px-6 py-3">Rp {{ number_format($sale->paid, 0, ',', '.') }}</td>
-                            <td class="px-6 py-3">Rp {{ number_format($sale->change, 0, ',', '.') }}</td>
+                <tbody class="text-sm">
+                    @php $no = 1; @endphp
+                    @forelse($sales as $sale)
+                        @php 
+                            // Hitung jumlah barang di dalam 1 transaksi
+                            $jumlahItem = $sale->saleItems->count() ?: 1; 
+                        @endphp
+                        
+                        @forelse($sale->saleItems as $index => $item)
+                        <tr class="hover:bg-slate-50/50 transition {{ $loop->last ? 'border-b-2 border-slate-100' : 'border-b border-slate-50' }}">
+                            
+                            @if($loop->first)
+                            <td class="p-4 text-center text-slate-500 align-top border-r border-slate-50" rowspan="{{ $jumlahItem }}">
+                                {{ $no++ }}
+                            </td>
+                            <td class="p-4 align-top border-r border-slate-50" rowspan="{{ $jumlahItem }}">
+                                <span class="block text-xs font-bold text-slate-400">{{ $sale->created_at->format('d M Y, H:i') }}</span>
+                                <span class="font-mono text-sm text-slate-700">TRX-{{ str_pad($sale->id, 5, '0', STR_PAD_LEFT) }}</span>
+                            </td>
+                            @endif
+                            
+                            <td class="p-4">
+                                <span class="block text-xs font-mono text-slate-500">{{ optional($item->product)->sku ?? '-' }}</span>
+                                <span class="font-bold text-slate-800">{{ optional($item->product)->name ?? 'Produk Dihapus' }}</span>
+                            </td>
+                            
+                            <td class="p-4 text-slate-700 font-medium">
+                                Rp {{ number_format($item->price ?? optional($item->product)->price ?? 0, 0, ',', '.') }}
+                            </td>
+                            
+                            <td class="p-4 text-center font-bold text-[#1e4e79]">
+                                {{ $item->qty }}
+                            </td>
+                            
+                            <td class="p-4 text-right font-bold text-slate-900">
+                                Rp {{ number_format(($item->price ?? optional($item->product)->price ?? 0) * $item->qty, 0, ',', '.') }}
+                            </td>
                         </tr>
+                        @empty
+                        <tr class="bg-red-50/30 border-b-2 border-slate-100">
+                            <td class="p-4 text-center text-slate-500">{{ $no++ }}</td>
+                            <td class="p-4"><span class="font-mono text-sm">TRX-{{ str_pad($sale->id, 5, '0', STR_PAD_LEFT) }}</span></td>
+                            <td colspan="4" class="p-4 text-red-500 italic text-sm">Detail transaksi ini tidak ditemukan.</td>
+                        </tr>
+                        @endforelse
+                        
                     @empty
-                        <tr class="border-t">
-                            <td colspan="4" class="px-6 py-6 text-center text-slate-500">Belum ada transaksi.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="6" class="p-12 text-center text-slate-400">
+                            Anda belum memiliki riwayat transaksi penjualan.
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
     </div>
+</div>
 @endsection

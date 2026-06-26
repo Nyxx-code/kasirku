@@ -12,29 +12,27 @@
 </head>
 <body class="bg-slate-50 text-slate-800">
 
+    <!-- NAVBAR -->
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-2">
                     <span class="text-2xl font-bold text-[#1e4e79]">Kasir<span class="text-[#f39200]">Ku</span></span>
                 </div>
-               <div class="hidden md:flex space-x-8 text-sm font-medium">
-    <a href="{{ url('/') }}" class="transition {{ request()->is('/') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
-        Beranda
-    </a>
-    
-    <a href="{{ url('/fitur') }}" class="transition {{ request()->is('fitur') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
-        Fitur
-    </a>
-    
-    <a href="{{ url('/harga') }}" class="transition {{ request()->is('harga') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
-        Harga
-    </a>
-    
-    <a href="{{ url('/kontak') }}" class="transition {{ request()->is('kontak') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
-        Kontak
-    </a>
-</div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                    <a href="{{ url('/') }}" class="transition {{ request()->is('/') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+                        Beranda
+                    </a>
+                    <a href="{{ url('/fitur') }}" class="transition {{ request()->is('fitur') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+                        Fitur
+                    </a>
+                    <a href="{{ url('/harga') }}" class="transition {{ request()->is('harga') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+                        Harga
+                    </a>
+                    <a href="{{ url('/kontak') }}" class="transition {{ request()->is('kontak') ? 'text-[#1e4e79] font-semibold border-b-2 border-[#1e4e79] pb-1' : 'text-slate-600 hover:text-[#1e4e79]' }}">
+                        Kontak
+                    </a>
+                </div>
                 <div>
                     <a href="/login" class="bg-[#1e4e79] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#163a5a] transition shadow-md">Masuk</a>
                 </div>
@@ -42,91 +40,74 @@
         </div>
     </nav>
 
-    <section class="py-16 bg-white text-center">
-        <div class="max-w-7xl mx-auto px-4">
-            <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Pilih Paket <span class=" font-bold text-[#1e4e79]">Kasir<span class="text-[#f39200]">Ku</span></span> yang Tepat</h1>
-            <p class="text-slate-600 text-lg max-w-2xl mx-auto italic">Investasi cerdas untuk efisiensi operasional dan pertumbuhan bisnis Anda.</p>
+    <!-- HERO SECTION -->
+    <section class="pt-16 pb-8 bg-slate-50 text-center">
+        <div class="max-w-3xl mx-auto px-4">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Satu Harga, <span class="text-[#f39200]">Semua Fitur Premium</span></h1>
+            <p class="text-slate-600 text-lg max-w-2xl mx-auto">Tidak perlu bingung memilih. Kami merancang satu paket lengkap yang paling optimal untuk mengelola dan membesarkan bisnis Anda.</p>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION -->
+    <section class="py-10 pb-20">
+        <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
             
-        </div>
-    </section>
-
-    <section class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            <!-- SINGLE PRICING CARD -->
+            <div class="bg-white p-8 sm:p-10 rounded-3xl border-2 border-[#f39200] shadow-2xl relative flex flex-col justify-between transform transition duration-300 hover:-translate-y-1">
                 
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Paket Standar</h3>
-                        <p class="text-slate-500 text-sm mb-6">Cocok untuk toko kecil atau warung pemula.</p>
-                        <div class="mb-8">
-                            <span class="text-3xl font-extrabold text-[#1e4e79]">Rp 150.000</span>
-                            <span class="text-slate-400 text-sm italic"> / bulan</span>
-                        </div>
-                        <ul class="space-y-4 mb-8 text-sm">
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> 1 Toko / Cabang</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> 1 Akun Kasir</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Transaksi Penjualan Dasar</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Laporan Harian</li>
-                        </ul>
+                <!-- Ribbon Label -->
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#f39200] text-white text-xs font-bold px-5 py-1.5 rounded-full uppercase tracking-widest shadow-md">
+                    Paket Lengkap (PRO)
+                </div>
+                
+                <!-- Header Card -->
+                <div class="text-center mt-2 mb-8">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">KasirKu Pro</h3>
+                    <p class="text-slate-500 text-sm mb-6">Solusi cerdas untuk retail, F&B, dan jasa.</p>
+                    <div class="flex items-end justify-center gap-1">
+                        <span class="text-4xl font-black text-[#1e4e79]">Rp 350.000</span>
+                        <span class="text-slate-400 font-medium mb-1"> / bulan</span>
                     </div>
-                    <a href="{{ url('/kontak?paket=Standar') }}" class="block text-center w-full py-3 rounded-xl border-2 border-[#1e4e79] text-[#1e4e79] font-bold hover:bg-[#1e4e79] hover:text-white transition mt-auto">
-                        Pilih Paket Standar
-                    </a>
                 </div>
 
-                <div class="bg-white p-8 rounded-3xl border-2 border-[#f39200] shadow-2xl relative transform scale-105 z-10 flex flex-col justify-between">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#f39200] text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest">Paling Populer</div>
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Paket Pro</h3>
-                        <p class="text-slate-500 text-sm mb-6">Untuk bisnis berkembang dengan banyak stok.</p>
-                        <div class="mb-8">
-                            <span class="text-3xl font-extrabold text-[#1e4e79]">Rp 350.000</span>
-                            <span class="text-slate-400 text-sm italic"> / bulan</span>
-                        </div>
-                        <ul class="space-y-4 mb-8 text-sm">
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Hingga 3 Toko / Cabang</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> 5 Akun Kasir & Admin</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Manajemen Stok (Inventori)</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Laporan Lengkap (Laba/Rugi)</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Integrasi Pembayaran Digital</li>
-                        </ul>
-                    </div>
-                    <a href="{{ url('/kontak?paket=Pro') }}" class="block text-center bg-[#f39200] text-white py-3 rounded-xl font-bold hover:bg-[#d88100] transition mt-auto">
-                        Pilih Paket Pro
-                    </a>
-                </div>
-
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Paket Enterprise</h3>
-                        <p class="text-slate-500 text-sm mb-6">Solusi skala besar untuk jaringan bisnis luas.</p>
-                        <div class="mb-8">
-                            <span class="text-3xl font-extrabold text-[#1e4e79]">Rp 750.000</span>
-                            <span class="text-slate-400 text-sm italic"> / bulan</span>
-                        </div>
-                        <ul class="space-y-4 mb-8 text-sm">
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Cabang Tak Terbatas</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Pengguna Tak Terbatas</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Manajemen Multi-Cabang</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> API Integrasi</li>
-                            <li class="flex items-center gap-3"><svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg> Dukungan Prioritas 24/7</li>
-                        </ul>
-                    </div>
-                    <a href="{{ url('/kontak?paket=Enterprise') }}" class="block text-center w-full py-3 rounded-xl border-2 border-[#1e4e79] text-[#1e4e79] font-bold hover:bg-[#1e4e79] hover:text-white transition mt-auto">
-                        Pilih Paket Enterprise
-                    </a>
-                </div>
-
+                <!-- Divider -->
+                <hr class="border-slate-100 mb-8">
+                
+                <!-- Features List -->
+                <ul class="space-y-4 mb-10 text-sm text-slate-700 font-medium">
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-[#f39200] shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        1 Akun Admin & 2 Akun Kasir
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-[#f39200] shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        Sistem Manajemen Stok Otomatis
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-[#f39200] shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        Laporan Penjualan & Laba Rugi Detail
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-[#f39200] shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        Pencatatan Pembayaran Tunai & Transfer Manual
+                    </li>
+                   
+                </ul>
+                
+                <!-- CTA Button -->
+                <a href="{{ url('/kontak?paket=Pro') }}" class="block text-center bg-[#f39200] text-white py-3.5 rounded-xl font-bold hover:bg-[#d88100] transition mt-auto shadow-lg shadow-orange-500/30">
+                    Daftar Sekarang
+                </a>
             </div>
+
         </div>
     </section>
 
-   
-
-    <footer class="bg-white border-t border-slate-200 py-12">
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <span class="text-2xl font-bold text-[#1e4e79]">Kasir<span class="text-[#f39200]">Ku</span></span>
-            <p class="mt-4 text-slate-500 text-sm italic">&copy; 2026 KasirKu POS System. Membantu UMKM Naik Kelas.</p>
+            <p class="mt-3 text-slate-500 text-sm font-medium">&copy; 2026 KasirKu POS System. Membantu UMKM Naik Kelas.</p>
         </div>
     </footer>
 

@@ -145,10 +145,11 @@
         </div>
     </section>
 
-    <footer class="bg-white border-t border-slate-200 py-12">
+     <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <span class="text-2xl font-bold text-[#1e4e79]">Kasir<span class="text-[#f39200]">Ku</span></span>
-            <p class="mt-4 text-slate-500 text-sm">&copy; 2026 KasirKu POS System. Powered by Laravel & Tailwind CSS.</p>
+            <p class="mt-3 text-slate-500 text-sm font-medium">&copy; 2026 KasirKu POS System. Membantu UMKM Naik Kelas.</p>
         </div>
     </footer>
 

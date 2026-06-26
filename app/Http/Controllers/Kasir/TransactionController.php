@@ -16,8 +16,14 @@ class TransactionController extends Controller
 {
     public function create(): View
     {
+        $user = Auth::user();
+        
+        // Identifikasi ID Toko: Jika Kasir ambil store_id-nya, jika Admin ambil id-nya sendiri
+        $storeId = $user->store_id ?: $user->id;
+
         return view('kasir.transactions.create', [
-            'products' => Product::orderBy('name')->get(),
+            // KUNCI 1: Hanya panggil produk yang 'store_id'-nya cocok dengan toko ini
+            'products' => Product::where('store_id', $storeId)->orderBy('name')->get(),
         ]);
     }
 
@@ -44,7 +50,12 @@ class TransactionController extends Controller
                 ->withInput();
         }
 
-        $products = Product::whereIn('id', $items->pluck('product_id'))
+        $user = Auth::user();
+        $storeId = $user->store_id ?: $user->id;
+
+        // KUNCI 2: Keamanan Ekstra! Pastikan produk yang dikirim dari form benar-benar milik toko ini
+        $products = Product::where('store_id', $storeId)
+            ->whereIn('id', $items->pluck('product_id'))
             ->get()
             ->keyBy('id');
 
@@ -53,10 +64,11 @@ class TransactionController extends Controller
         foreach ($items as $item) {
             $product = $products->get($item['product_id']);
 
+            // Jika produk tidak ditemukan (atau beda toko), tolak transaksinya
             if (! $product) {
                 return redirect()
                     ->back()
-                    ->withErrors(['items' => 'Produk tidak ditemukan.'])
+                    ->withErrors(['items' => 'Produk tidak ditemukan atau bukan milik toko ini.'])
                     ->withInput();
             }
 
@@ -79,11 +91,7 @@ class TransactionController extends Controller
                 ->withInput();
         }
 
-        $userId = Auth::id();
-
-        if (! $userId) {
-            abort(401);
-        }
+        $userId = $user->id;
 
         DB::transaction(function () use ($items, $products, $total, $data, $userId): void {
             $sale = Sale::create([
@@ -110,6 +118,7 @@ class TransactionController extends Controller
             }
         });
 
+        // KUNCI 3: Gunakan session flash agar keranjang otomatis kosong seperti yang kita atur di file view
         return redirect()
             ->route('kasir.transactions.create')
             ->with('status', 'Transaksi berhasil disimpan.');

@@ -4,41 +4,24 @@ namespace App\Http\Controllers\Kasir;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sale;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class ReportController extends Controller
 {
-    public function index(Request $request): View
+    public function index()
     {
-        $start = $request->query('start');
-        $end = $request->query('end');
-        $userId = Auth::id();
+        // Ambil ID kasir yang sedang aktif / login
+        $kasirId = Auth::id();
 
-        $query = Sale::with('user')
-            ->where('user_id', $userId)
-            ->orderByDesc('sold_at');
+        // Jumlahkan total omzet khusus dari transaksi kasir ini saja
+        $totalRevenue = Sale::where('user_id', $kasirId)->sum('total');
 
-        if ($start) {
-            $query->whereDate('sold_at', '>=', Carbon::parse($start));
-        }
+        // Tarik data transaksi beserta detail barang, khusus milik kasir ini
+        $sales = Sale::with('saleItems.product')
+                     ->where('user_id', $kasirId)
+                     ->latest()
+                     ->get();
 
-        if ($end) {
-            $query->whereDate('sold_at', '<=', Carbon::parse($end));
-        }
-
-        $sales = $query->get();
-
-        return view('kasir.reports.index', [
-            'sales' => $sales,
-            'totalRevenue' => (int) $sales->sum('total'),
-            'totalTransactions' => $sales->count(),
-            'filters' => [
-                'start' => $start,
-                'end' => $end,
-            ],
-        ]);
+        return view('kasir.reports.index', compact('sales', 'totalRevenue'));
     }
 }
