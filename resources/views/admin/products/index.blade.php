@@ -28,10 +28,12 @@
             {{-- TAMBAHAN: Dibungkus div flex agar tombol Export dan Tambah berjejer rapi --}}
             <div class="flex gap-2">
                 {{-- TAMBAHAN: Tombol Export Excel --}}
-                <button onclick="exportExcel()" class="flex items-center gap-2 bg-green-600 text-white font-semibold px-4 py-3 rounded-xl hover:bg-green-700 transition shadow-sm text-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
-                    Export Excel
-                </button>
+               {{-- Tombol Import & Input File Tersembunyi --}}
+<input type="file" id="fileExcel" class="hidden" accept=".xlsx, .xls" onchange="prosesImport(event)">
+<button onclick="document.getElementById('fileExcel').click()" class="flex items-center gap-2 text-white font-semibold px-4 py-3 rounded-xl hover:opacity-90 transition shadow-sm text-sm" style="background-color: #16a34a;">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+    Import Excel
+</button>
 
                 <button onclick="openAddModal()" class="px-5 py-3 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition" style="background-color: #0f172a;">
                     + Tambah Produk Baru
@@ -94,14 +96,44 @@
         </div>
     </div>
 
-<!-- TAMBAHAN: Script Export Excel ditaruh di bawah div penutup -->
-<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
 <script>
-    function exportExcel() {
-        var table = document.getElementById("tabel-produk");
-        var workbook = XLSX.utils.table_to_book(table, {sheet: "Data Stok Produk"});
-        var fileName = "Data_Produk_Kasirku_" + new Date().toISOString().slice(0,10) + ".xlsx";
-        XLSX.writeFile(workbook, fileName);
+    function prosesImport(event) {
+        let file = event.target.files[0];
+        if (!file) return;
+
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let data = new Uint8Array(e.target.result);
+            let workbook = XLSX.read(data, {type: 'array'});
+            let firstSheet = workbook.SheetNames[0];
+            
+            // MENGGUNAKAN {header: 1} agar dibaca sebagai urutan kolom (Kolom 1, Kolom 2, dst)
+            let excelRows = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], {header: 1});
+            
+            fetch('/admin/products/import', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ data: excelRows })
+            })
+            .then(async response => {
+                let result = await response.json();
+                if(response.ok && result.success) {
+                    alert('BERHASIL! Data Excel sudah masuk ke tabel.');
+                    location.reload();
+                } else {
+                    alert('Gagal: ' + result.message);
+                }
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan koneksi sistem.');
+            });
+        };
+        reader.readAsArrayBuffer(file);
     }
 </script>
 </div>

@@ -34,9 +34,19 @@ class DeveloperController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'store_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users',
+                'regex:/^[a-zA-Z0-9._%+-]{3,}@/' // Kunci Sakti
+            ],
             'phone_number' => 'required|string|max:20',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            // Pesan error kustom untuk regex
+            'email.regex' => 'Format email tidak valid! Gunakan minimal 3 karakter sebelum tanda @ (Contoh: abc@gmail.com).'
         ]);
 
         User::create([
@@ -58,8 +68,18 @@ class DeveloperController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'store_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email,' . $id,
+                'regex:/^[a-zA-Z0-9._%+-]{3,}@/' // Kunci Sakti
+            ],
             'phone_number' => 'required|string|max:20',
+        ], [
+            // Pesan error kustom untuk regex
+            'email.regex' => 'Format email tidak valid! Gunakan minimal 3 karakter sebelum tanda @ (Contoh: abc@gmail.com).'
         ]);
 
         $admin->update([

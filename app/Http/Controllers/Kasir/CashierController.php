@@ -24,8 +24,16 @@ class CashierController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email',
+                'regex:/^[a-zA-Z0-9._%+-]{3,}@/' // Kunci Sakti: Minimal 3 karakter sebelum @
+            ],
             'password' => 'required|min:6',
+        ], [
+            // Pesan error kustom untuk regex
+            'email.regex' => 'Format email tidak valid! Gunakan minimal 3 karakter sebelum tanda @ (Contoh: abc@gmail.com).'
         ]);
 
         // KUNCI 2: Hitung batas maksimal kasir HANYA di toko Admin ini
@@ -58,7 +66,15 @@ class CashierController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email,' . $id,
+                'regex:/^[a-zA-Z0-9._%+-]{3,}@/' // Kunci Sakti: Minimal 3 karakter sebelum @
+            ],
+        ], [
+            // Pesan error kustom untuk regex
+            'email.regex' => 'Format email tidak valid! Gunakan minimal 3 karakter sebelum tanda @ (Contoh: abc@gmail.com).'
         ]);
 
         $kasir->name = $request->name;

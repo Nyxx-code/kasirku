@@ -37,7 +37,20 @@
             </div>
             
             <div class="flex flex-wrap items-center gap-3">
-                <form action="{{ route('admin.reports.index') }}" method="GET" class="flex items-center gap-2">
+                <form action="{{ route('admin.reports.index') }}" method="GET" class="flex items-center gap-2 flex-wrap md:flex-nowrap">
+                    
+                    {{-- TAMBAHAN: DROPDOWN FILTER HARI DI SEBELAH KIRI --}}
+                    <select name="filter_hari" onchange="this.form.submit()" class="px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none text-slate-600 bg-white cursor-pointer hover:border-slate-300 transition">
+                        <option value="">Semua Waktu</option>
+                        <option value="7" {{ request('filter_hari') == '7' ? 'selected' : '' }}>7 Hari Terakhir</option>
+                        <option value="14" {{ request('filter_hari') == '14' ? 'selected' : '' }}>14 Hari Terakhir</option>
+                        <option value="21" {{ request('filter_hari') == '21' ? 'selected' : '' }}>21 Hari Terakhir</option>
+                        <option value="30" {{ request('filter_hari') == '30' ? 'selected' : '' }}>30 Hari Terakhir</option>
+                    </select>
+
+                    <div class="w-px h-6 bg-slate-300 mx-1 hidden md:block"></div> {{-- Pembatas Visual --}}
+
+                    {{-- FILTER RENTANG TANGGAL BAWAAN --}}
                     <input type="date" name="start_date" value="{{ request('start_date') }}" class="px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none text-slate-600">
                     <span class="text-slate-400 font-medium">-</span>
                     <input type="date" name="end_date" value="{{ request('end_date') }}" class="px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none text-slate-600">

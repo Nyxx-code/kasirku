@@ -16,6 +16,28 @@
             </div>
         </div>
 
+        {{-- BARIS FILTER --}}
+        <div class="flex justify-end mb-5">
+            <form action="" method="GET" class="flex items-center gap-2 flex-wrap md:flex-nowrap">
+                <select name="filter_hari" onchange="this.form.submit()" class="px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none text-slate-600 bg-white cursor-pointer hover:border-slate-300 transition">
+                    <option value="">Semua Waktu</option>
+                    <option value="7" {{ request('filter_hari') == '7' ? 'selected' : '' }}>7 Hari Terakhir</option>
+                    <option value="14" {{ request('filter_hari') == '14' ? 'selected' : '' }}>14 Hari Terakhir</option>
+                    <option value="21" {{ request('filter_hari') == '21' ? 'selected' : '' }}>21 Hari Terakhir</option>
+                    <option value="30" {{ request('filter_hari') == '30' ? 'selected' : '' }}>30 Hari Terakhir</option>
+                </select>
+
+                <div class="w-px h-6 bg-slate-300 mx-1 hidden md:block"></div>
+
+                <input type="date" name="start_date" value="{{ request('start_date') }}" class="px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none text-slate-600">
+                <span class="text-slate-400 font-medium">-</span>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" class="px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none text-slate-600">
+                <button type="submit" class="px-4 py-2 rounded-xl text-sm font-bold text-white transition hover:opacity-90 shadow-sm" style="background-color: #0f172a;">
+                    Filter
+                </button>
+            </form>
+        </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse whitespace-nowrap">
                 <thead class="bg-slate-50 text-xs uppercase font-bold text-slate-600 border-b border-slate-100">
@@ -26,6 +48,7 @@
                         <th class="p-4">Harga Satuan</th>
                         <th class="p-4 text-center">Qty</th>
                         <th class="p-4 text-right">Subtotal</th>
+                        <th class="p-4 text-center">Aksi</th> {{-- TAMBAHAN KOLOM AKSI --}}
                     </tr>
                 </thead>
                 <tbody class="text-sm">
@@ -65,18 +88,33 @@
                             <td class="p-4 text-right font-bold text-slate-900">
                                 Rp {{ number_format(($item->price ?? optional($item->product)->price ?? 0) * $item->qty, 0, ',', '.') }}
                             </td>
+
+                            {{-- TAMBAHAN TOMBOL CETAK --}}
+                            @if($loop->first)
+                            <td class="p-4 text-center align-top border-l border-slate-50" rowspan="{{ $jumlahItem }}">
+                                <a href="{{ route('kasir.reports.print', $sale->id) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-xs font-bold px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition inline-block">
+                                    🖨️ Cetak
+                                </a>
+                            </td>
+                            @endif
+
                         </tr>
                         @empty
                         <tr class="bg-red-50/30 border-b-2 border-slate-100">
                             <td class="p-4 text-center text-slate-500">{{ $no++ }}</td>
                             <td class="p-4"><span class="font-mono text-sm">TRX-{{ str_pad($sale->id, 5, '0', STR_PAD_LEFT) }}</span></td>
                             <td colspan="4" class="p-4 text-red-500 italic text-sm">Detail transaksi ini tidak ditemukan.</td>
+                            <td class="p-4 text-center border-l border-slate-50">
+                                <a href="{{ route('kasir.reports.print', $sale->id) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-xs font-bold px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition inline-block">
+                                    🖨️ Cetak
+                                </a>
+                            </td>
                         </tr>
                         @endforelse
                         
                     @empty
                     <tr>
-                        <td colspan="6" class="p-12 text-center text-slate-400">
+                        <td colspan="7" class="p-12 text-center text-slate-400">
                             Anda belum memiliki riwayat transaksi penjualan.
                         </td>
                     </tr>

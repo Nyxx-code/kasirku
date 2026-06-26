@@ -65,8 +65,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
         
         // MENGGUNAKAN RESOURCE UNTUK KASIR (Otomatis handle index, store, update, destroy)
-        // Rute manual AdminDashboardController sudah dihapus agar tidak tabrakan
         Route::resource('cashiers', CashierController::class)->names('cashiers');
+
+        // --- ROUTE IMPORT EXCEL (HARUS DI ATAS ROUTE PRODUK LAINNYA) ---
+        Route::post('/products/import', [AdminProductController::class, 'importExcel'])->name('products.import');
 
         // Rute untuk Kelola Produk
         Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
@@ -94,4 +96,5 @@ Route::middleware(['auth', 'role:kasir'])
         Route::get('/transactions/create', [KasirTransactionController::class, 'create'])->name('transactions.create');
         Route::post('/transactions', [KasirTransactionController::class, 'store'])->name('transactions.store');
         Route::get('/reports', [KasirReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/{id}/print', [App\Http\Controllers\Kasir\ReportController::class, 'print'])->name('reports.print');
     });
