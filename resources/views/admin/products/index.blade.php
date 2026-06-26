@@ -24,14 +24,25 @@
                 <h2 class="text-xl font-bold text-slate-800">Katalog & Stok Produk</h2>
                 <p class="text-xs text-slate-500 mt-0.5">Kelola daftar produk dan stok barang toko.</p>
             </div>
-            <button onclick="openAddModal()" class="px-5 py-3 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition" style="background-color: #0f172a;">
-                + Tambah Produk Baru
-            </button>
+            
+            {{-- TAMBAHAN: Dibungkus div flex agar tombol Export dan Tambah berjejer rapi --}}
+            <div class="flex gap-2">
+                {{-- TAMBAHAN: Tombol Export Excel --}}
+                <button onclick="exportExcel()" class="flex items-center gap-2 bg-green-600 text-white font-semibold px-4 py-3 rounded-xl hover:bg-green-700 transition shadow-sm text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+                    Export Excel
+                </button>
+
+                <button onclick="openAddModal()" class="px-5 py-3 rounded-xl text-sm font-bold text-white shadow-sm hover:opacity-90 transition" style="background-color: #0f172a;">
+                    + Tambah Produk Baru
+                </button>
+            </div>
         </div>
 
         {{-- Tabel --}}
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse whitespace-nowrap">
+            {{-- TAMBAHAN: id="tabel-produk" ditambahkan di sini --}}
+            <table id="tabel-produk" class="w-full text-left border-collapse whitespace-nowrap">
                 <thead class="bg-slate-50 border-b border-slate-100">
                     <tr class="text-xs uppercase font-bold text-slate-500 tracking-wider">
                         <th class="p-4 w-16 text-center">No</th>
@@ -82,6 +93,17 @@
             </table>
         </div>
     </div>
+
+<!-- TAMBAHAN: Script Export Excel ditaruh di bawah div penutup -->
+<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+<script>
+    function exportExcel() {
+        var table = document.getElementById("tabel-produk");
+        var workbook = XLSX.utils.table_to_book(table, {sheet: "Data Stok Produk"});
+        var fileName = "Data_Produk_Kasirku_" + new Date().toISOString().slice(0,10) + ".xlsx";
+        XLSX.writeFile(workbook, fileName);
+    }
+</script>
 </div>
 
 {{-- MODAL TAMBAH --}}
